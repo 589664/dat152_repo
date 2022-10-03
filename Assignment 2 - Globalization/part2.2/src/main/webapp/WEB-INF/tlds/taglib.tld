@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee--
+    web-jsptaglibrary_2_0.xsd">
+
+	<tlib-version>1.0</tlib-version>
+	<short-name>taglib</short-name>
+	<uri>webshop_taglib</uri>
+	
+	<tag>
+		<description>Watermark</description>
+		<name>copyright</name>
+		<tag-class>tags.WatermarkTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>since</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>Segment limiter</description>
+		<name>shorttext</name>
+		<tag-class>tags.ShorttextTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>maxchars</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>
