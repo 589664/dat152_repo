@@ -1,0 +1,33 @@
+
+/* make border as a whole line*/
+table {
+    border-collapse: collapse;
+}
+
+/* border under headers */
+th {
+    border-bottom: 1px solid #000000;
+}
+
+#table1 {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #table1 td, #table1 th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #table1 tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #table1 tr:hover {background-color: #ddd;}
+  
+  #table1 th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #33918c;
+    color: rgb(0, 0, 0);
+  }
