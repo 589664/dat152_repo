@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="no.hvl.dat152.obl3.util.CSRF"%>    
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +20,18 @@
 		<input type="hidden" name="redirect_uri" value="${redirect_uri}"/>
 		<input type="hidden" name="state" value="${state}"/>
 		<p><input type="submit" value="Log in"/></p>
+		
+		<%
+		// generate a random CSRF token 
+		String csrfToken = CSRF.getToken();
+		
+		// place the CSRF token in a cookie
+		javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("csrfToken", csrfToken);
+		response.addCookie(cookie);
+		%>
+		<input type="hidden" name="csrfToken" value="<%= csrfToken %>"/>
+		
+		
 	</form>
 	<p><a href="index.jsp">Back</a></p>
 

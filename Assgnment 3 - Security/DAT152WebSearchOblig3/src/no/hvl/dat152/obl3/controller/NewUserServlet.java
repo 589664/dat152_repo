@@ -28,6 +28,8 @@ public class NewUserServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
+		doAction(request,response);
 
 		boolean successfulRegistration = false;
 
@@ -71,6 +73,29 @@ public class NewUserServlet extends HttpServlet {
 			request.getRequestDispatcher("newuser.jsp").forward(request,
 					response);
 		}
+	}
+	
+	public void doAction(HttpServletRequest request, HttpServletResponse response) {
+		// get the CSRF cookie
+		String csrfCookie = null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("csrfToken")) {
+				csrfCookie = cookie.getValue();
+			}
+		}
+		// get the CSRF form field
+		String csrfField = request.getParameter("csrfToken");
+
+		// validate CSRF
+		if (csrfCookie == null || csrfField == null || !csrfCookie.equals(csrfField)) {
+			try {
+				response.sendError(401);
+			} catch (IOException e) {
+				// ...
+			}
+			return;
+		}
+		// ...
 	}
 
 }

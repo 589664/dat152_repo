@@ -17,7 +17,7 @@ public class Constants {
 	public static final String IDP_TOKEN_ENDPOINT = "http://localhost:"+IDP_PORT+"/DAT152WebSearchOblig3/token";
 	public static final String IDP_USERCLAIMS_ENDPOINT = "http://localhost:"+IDP_PORT+"/DAT152WebSearchOblig3/userinfo";
 	public static final String IDP_REGISTER_ENDPOINT = "http://localhost:"+IDP_PORT+"/DAT152WebSearchOblig3/register";
-	
+
 	public static final String IDP_PATH = "/DAT152WebSearchOblig3";
 	
 	// client

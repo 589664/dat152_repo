@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +30,7 @@ public class UpdatePasswordServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		doAction(request,response);
 		request.removeAttribute("message");
 
 		boolean successfulPasswordUpdate = false;
@@ -72,6 +73,29 @@ public class UpdatePasswordServlet extends HttpServlet {
 					response);
 		}
 
+	}
+	
+	public void doAction(HttpServletRequest request, HttpServletResponse response) {
+		// get the CSRF cookie
+		String csrfCookie = null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("csrfToken")) {
+				csrfCookie = cookie.getValue();
+			}
+		}
+		// get the CSRF form field
+		String csrfField = request.getParameter("csrfToken");
+
+		// validate CSRF
+		if (csrfCookie == null || csrfField == null || !csrfCookie.equals(csrfField)) {
+			try {
+				response.sendError(401);
+			} catch (IOException e) {
+				// ...
+			}
+			return;
+		}
+		// ...
 	}
 
 }

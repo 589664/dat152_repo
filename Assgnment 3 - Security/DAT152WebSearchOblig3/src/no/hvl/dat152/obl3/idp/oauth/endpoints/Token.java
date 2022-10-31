@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -109,6 +110,11 @@ public class Token extends HttpServlet {
 					jwt.setSub(redirectURI);
 					jwt.setAud(clientID);
 					jwt.setIat(new Date());
+					
+					//fix
+					Date expDate = new Date();
+					expDate.setTime(expDate.getTime() + 10000);
+					jwt.setExp(expDate);
 
 					// add a custom username 
 					if(ucd != null) {
@@ -133,6 +139,8 @@ public class Token extends HttpServlet {
 					jwt.setSub(redirectURI);
 					jwt.setAud(clientID);
 					jwt.setIat(new Date());
+					//fix
+					jwt.setExp(expDate);
 
 					String access_token = JWTHandler.createJWTAsymmetricKey(jwt, webpath);		// JWS = Signed JWT (asymmetric key)
 					

@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="no.hvl.dat152.obl3.util.CSRF"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +15,16 @@
 		<p>Dictionary search (enter word, e.g. Car): 
 			<input type="text" name="searchkey" />
 			<input type="submit" value="Go!"/></p>
+			
+			<%
+			// generate a random CSRF token 
+			String csrfToken = CSRF.getToken();
+			
+			// place the CSRF token in a cookie
+			javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("csrfToken", csrfToken);
+			response.addCookie(cookie);
+			%>
+			<input type="hidden" name="csrfToken" value="<%= csrfToken %>"/>
 	</form>
 	<p><b>Last 5 searches done by anyone (Only visible to super Admins)</b></p>
 	<p>

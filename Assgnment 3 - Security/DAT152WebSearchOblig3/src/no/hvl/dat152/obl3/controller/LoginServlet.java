@@ -59,7 +59,7 @@ public class LoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 				
 		/* 2. login the user (a "post" request from login.jsp is handled here) */
-		
+		doAction(request,response);
 		String client_id = request.getParameter(Constants.CLIENT_ID);
 		
 		/* first, check that the user has a valid session */
@@ -84,9 +84,8 @@ public class LoginServlet extends HttpServlet {
 	}
 	
 	private void handleLoginLogic(HttpServletRequest request, HttpServletResponse response, String client_id) throws IOException, ServletException {
-		// check if the user is requesting a SSO (we do this by checking if the request comes with a client_id				
+		// check if the user is requesting a SSO (we do this by checking if the request comes with a client_id	
 		if(!client_id.isEmpty()) {	/* SSO request */
-			
 			validateOrForwardUserReq(request, response, client_id);
 
 		} else { /* Not a SSO - logged-in request is local */
@@ -192,5 +191,28 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 		return successfulLogin;
+	}
+	
+	public void doAction(HttpServletRequest request, HttpServletResponse response) {
+		// get the CSRF cookie
+		String csrfCookie = null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("csrfToken")) {
+				csrfCookie = cookie.getValue();
+			}
+		}
+		// get the CSRF form field
+		String csrfField = request.getParameter("csrfToken");
+
+		// validate CSRF
+		if (csrfCookie == null || csrfField == null || !csrfCookie.equals(csrfField)) {
+			try {
+				response.sendError(401);
+			} catch (IOException e) {
+				// ...
+			}
+			return;
+		}
+		// ...
 	}
 }

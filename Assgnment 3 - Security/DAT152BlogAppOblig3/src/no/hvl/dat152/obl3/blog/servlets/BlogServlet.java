@@ -75,6 +75,7 @@ public class BlogServlet extends HttpServlet {
 			processRequest(request, response);						
 		} else {
 			String pubkeypath = getServletContext().getRealPath("/WEB-INF/");
+			
 			boolean validSSOSession = RequestHelper.isLoggedInSSO(request, pubkeypath);		
 			if(validSSOSession) {
 				processRequest(request, response);

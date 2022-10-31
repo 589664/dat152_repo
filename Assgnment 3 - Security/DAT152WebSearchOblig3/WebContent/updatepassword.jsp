@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="no.hvl.dat152.obl3.util.CSRF"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +21,17 @@
 		<td><p><input type="submit" value="Update Password"/></p></td>
 	</tr>
 	</table>
+	
+	<%
+		// generate a random CSRF token 
+		String csrfToken = CSRF.getToken();
+		
+		// place the CSRF token in a cookie
+		javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("csrfToken", csrfToken);
+		response.addCookie(cookie);
+	%>
+	<input type="hidden" name="csrfToken" value="<%= csrfToken %>"/>
+	
 	</form>
 	
 	<br>

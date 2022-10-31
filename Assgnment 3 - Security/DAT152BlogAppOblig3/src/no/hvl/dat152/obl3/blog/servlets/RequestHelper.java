@@ -42,10 +42,12 @@ public class RequestHelper {
 	}
 	
 	public static boolean isLoggedInSSO(HttpServletRequest request, String keypath) {
+		
 		String id_token = RequestHelper.getCookieValue(request, "id_token");
 		doJWT(request, id_token);
 		
-		return JWTHandler.verifyJWT(id_token, keypath);
+		//fixed
+		return JWTHandler.verifyJWT(id_token, keypath) && JWTHandler.verifyJWTSignature(id_token, keypath);
 		
 	}
 	
