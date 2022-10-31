@@ -5,7 +5,7 @@ package no.hvl.dat152.obl3.idp.oauth.utility;
 
 public class Constants {
 	
-	public static final String ISSUER_IDP = "http://localhost:9092/DAT152WebSearch";
+	public static final String ISSUER_IDP = "http://localhost:9092/DAT152WebSearchOblig3";
 	
 	public static final String RESPONSE_TYPE = "response_type";
 	public static final String REDIRECT_URI = "redirect_uri";
