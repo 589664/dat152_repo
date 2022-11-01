@@ -5,88 +5,98 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SearchItemDAO {
 
-  public List<SearchItem> getSearchHistoryLastFive() {
-    String sql = "SELECT * FROM SecOblig.History ORDER BY datetime DESC";
-    // LIMIT 5
-    // Derby lacks LIMIT
-    return getSearchItemList(sql,5);
-  }
+	public List<SearchItem> getSearchHistoryLastFive() {
+		String sql = "SELECT * FROM SecOblig.History ORDER BY datetime DESC";
+		// LIMIT 5
+		// Derby lacks LIMIT
+		return getSearchItemList(sql, 5);
+	}
 
-  public List<SearchItem> getSearchHistoryForUser(String username) {
-	    String sql = "SELECT * FROM SecOblig.History " 
-	        + "WHERE username = '" + username 
-	        + "' ORDER BY datetime DESC";
-	    //  LIMIT 50
-	    // Derby lacks LIMIT
-	    return getSearchItemList(sql,50);
-	  }
-  
-  public List<SearchItem> getSearchHistoryForUser(String username, String sortkey) {
-    String sql = "SELECT * FROM SecOblig.History " 
-        + "WHERE username = '" + username 
-        + "' ORDER BY "+sortkey+" ASC";
-    //  LIMIT 50
-    // Derby lacks LIMIT
-    return getSearchItemList(sql,50);
-  }
+	public List<SearchItem> getSearchHistoryForUser(String username) {
+		String sql = "SELECT * FROM SecOblig.History " + "WHERE username = '" + username + "' ORDER BY datetime DESC";
+		// LIMIT 50
+		// Derby lacks LIMIT
+		return getSearchItemList(sql, 50);
+	}
 
-  private List<SearchItem> getSearchItemList(String sql,Integer limit) {
+	public List<SearchItem> getSearchHistoryForUser(String username, String sortkey) {
+		String sql = "SELECT * FROM SecOblig.History " + "WHERE username = '" + username + "' ORDER BY " + sortkey
+				+ " ASC";
+		// LIMIT 50
+		// Derby lacks LIMIT
+		return getSearchItemList(sql, 50);
+	}
 
-    List<SearchItem> result = new ArrayList<SearchItem>();
+	private List<SearchItem> getSearchItemList(String sql, Integer limit) {
 
-    Connection c = null;
-    Statement s = null;
-    ResultSet r = null;
+		List<SearchItem> result = new ArrayList<SearchItem>();
 
-    try {        
-      c = DatabaseHelper.getConnection();
-      s = c.createStatement();
-      if (limit > 0) s.setMaxRows(limit);
-      r = s.executeQuery(sql);
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
 
-      while (r.next()) {
-        SearchItem item = new SearchItem(
-            r.getTimestamp("datetime"),
-            r.getString("username"),
-            r.getString("searchkey")
-            );
-        result.add(item);
-      }
+		Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
+		
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			if (limit > 0)
+				s.setMaxRows(limit);
+			r = s.executeQuery(sql);
 
-    } catch (Exception e) {
-    	e.printStackTrace();
-      //System.out.println(e);
-    } finally {
-      DatabaseHelper.closeConnection(r, s, c);
-    }
+			while (r.next()) {
+				SearchItem item = new SearchItem(r.getTimestamp("datetime"), r.getString("username"),
+						r.getString("searchkey"));
+				Matcher match = pattern.matcher(item.getSearchkey());
+				boolean IsCleanSearch = match.matches();
+				if(IsCleanSearch) {
+					result.add(item);					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// System.out.println(e);
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
+		
 
-    return result;
-  }
+		return result;
+	}
 
-  public void saveSearch(SearchItem search) {
+	public void saveSearch(SearchItem search) {
 
-    String sql = "INSERT INTO SecOblig.History VALUES (" 
-        + "'" + search.getDatetime()  + "', "
-        + "'" + search.getUsername()  + "', "
-        + "'" + search.getSearchkey() + "')";
+		Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
+		Matcher match = pattern.matcher(search.getSearchkey());
+		boolean IsSearchClean = match.matches();
 
-    Connection c = null;
-    Statement s = null;
-    ResultSet r = null;
+		if (IsSearchClean) {
+			String sql = "INSERT INTO SecOblig.History VALUES (" + "'" + search.getDatetime() + "', " + "'"
+					+ search.getUsername() + "', " + "'" + search.getSearchkey() + "')";
 
-    try {        
-      c = DatabaseHelper.getConnection();
-      s = c.createStatement();       
-      s.executeUpdate(sql);
+			Connection c = null;
+			Statement s = null;
+			ResultSet r = null;
 
-    } catch (Exception e) {
-      System.out.println(e);
-    } finally {
-      DatabaseHelper.closeConnection(r, s, c);
-    }
-  }
+			try {
+				c = DatabaseHelper.getConnection();
+				s = c.createStatement();
+				s.executeUpdate(sql);
+
+			} catch (Exception e) {
+				System.out.println(e);
+			} finally {
+				DatabaseHelper.closeConnection(r, s, c);
+			}
+		}else {
+			System.out.println("Deez");
+		}
+		
+	}
 
 }

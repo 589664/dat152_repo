@@ -1,6 +1,8 @@
 package no.hvl.dat152.obl3.controller;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +18,6 @@ import no.hvl.dat152.obl3.util.Validator;
 @WebServlet("/updatepassword")
 public class UpdatePasswordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// check that the user has a valid session
@@ -30,6 +31,7 @@ public class UpdatePasswordServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+
 		doAction(request,response);
 		request.removeAttribute("message");
 
@@ -47,7 +49,7 @@ public class UpdatePasswordServlet extends HttpServlet {
 			
 			AppUserDAO userDAO = new AppUserDAO();
 			
-			if (passwordnew.equals(confirmedPasswordnew)){
+			if (passwordnew.equals(confirmedPasswordnew) && PassordValidering(passwordnew)){
 				
 				successfulPasswordUpdate = userDAO.updateUserPassword(user.getUsername(), passwordnew);
 				
@@ -96,6 +98,13 @@ public class UpdatePasswordServlet extends HttpServlet {
 			return;
 		}
 		// ...
+	}
+	
+	public static boolean PassordValidering(String password) {
+		String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher passwordMatch = pattern.matcher(password);
+		return passwordMatch.matches();
 	}
 
 }

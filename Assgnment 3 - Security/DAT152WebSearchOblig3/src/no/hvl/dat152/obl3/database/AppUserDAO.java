@@ -5,228 +5,214 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.*;
 
 import no.hvl.dat152.obl3.util.Crypto;
 
-
 public class AppUserDAO {
 
-  public AppUser getAuthenticatedUser(String username, String password) {
+	public AppUser getAuthenticatedUser(String username, String password) {
 
-    String hashedPassword = Crypto.generateMD5Hash(password);
+		String hashedPassword = Crypto.generateMD5Hash(password);
 
-    String sql = "SELECT * FROM SecOblig.AppUser" 
-        + " WHERE username = '" + username + "'"
-        + " AND passhash = '" + hashedPassword + "'";
-    
-    
-    AppUser user = null;
+		Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
+		Matcher match = pattern.matcher(username);
+		boolean UsernameIsClean = match.matches();
 
-    Connection c = null;
-    Statement s = null;
-    ResultSet r = null;
+		String sql = "SELECT * FROM SecOblig.AppUser" + " WHERE username = '" + username + "'" + " AND passhash = '"
+				+ hashedPassword + "'";
 
-    try {        
-      c = DatabaseHelper.getConnection();
-      s = c.createStatement();       
-      r = s.executeQuery(sql);
+		AppUser user = null;
 
-      if (r.next()) {
-        user = new AppUser(
-            r.getString("username"),
-            r.getString("passhash"),
-            r.getString("firstname"),
-            r.getString("lastname"),
-            r.getString("mobilephone"),
-            r.getString("role"),
-            r.getString("clientId")
-            );
-      }
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
 
-    } catch (Exception e) {
-      System.out.println(e);
-    } finally {
-      DatabaseHelper.closeConnection(r, s, c);
-    }
+		try {
 
-    return user;
-  }
-  
-  public String getUserClientID(String mobilephone) {
+			if (UsernameIsClean) {
+				c = DatabaseHelper.getConnection();
+				s = c.createStatement();
+				r = s.executeQuery(sql);
 
-    String sql = "SELECT clientId FROM SecOblig.AppUser" 
-        + " WHERE mobilephone = '" + mobilephone + "'";
-    
-    
-    String clientID = null;
+				if (r.next()) {
+					user = new AppUser(r.getString("username"), r.getString("passhash"), r.getString("firstname"),
+							r.getString("lastname"), r.getString("mobilephone"), r.getString("role"),
+							r.getString("clientId"));
+				}
+			}
 
-    Connection c = null;
-    Statement s = null;
-    ResultSet r = null;
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
 
-    try {        
-      c = DatabaseHelper.getConnection();
-      s = c.createStatement();       
-      r = s.executeQuery(sql);
+		return user;
+	}
 
-      if (r.next()) {
-        clientID = r.getString("clientId");
-      }
+	public String getUserClientID(String mobilephone) {
 
-    } catch (Exception e) {
-      System.out.println(e);
-    } finally {
-      DatabaseHelper.closeConnection(r, s, c);
-    }
-    
-    return clientID;
-  }
-  
-  public boolean clientIDExist(String clientid) {
+		String sql = "SELECT clientId FROM SecOblig.AppUser" + " WHERE mobilephone = '" + mobilephone + "'";
 
-	    String sql = "SELECT clientId FROM SecOblig.AppUser" 
-	        + " WHERE clientId = '" + clientid + "'";
-	    
-	    
-	    String clientID = null;
+		String clientID = null;
 
-	    Connection c = null;
-	    Statement s = null;
-	    ResultSet r = null;
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
 
-	    try {        
-	      c = DatabaseHelper.getConnection();
-	      s = c.createStatement();       
-	      r = s.executeQuery(sql);
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			r = s.executeQuery(sql);
 
-	      if (r.next()) {
-	        clientID = r.getString("clientId");
-	      }
+			if (r.next()) {
+				clientID = r.getString("clientId");
+			}
 
-	    } catch (Exception e) {
-	      System.out.println(e);
-	    } finally {
-	      DatabaseHelper.closeConnection(r, s, c);
-	    }
-	    
-	    return clientID != null;
-	  }
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
 
-  public boolean saveUser(AppUser user) {
+		return clientID;
+	}
 
-    String sql = "INSERT INTO SecOblig.AppUser VALUES (" 
-        + "'" + user.getUsername()  + "', "
-        + "'" + user.getPasshash()  + "', "
-        + "'" + user.getFirstname() + "', "
-        + "'" + user.getLastname()  + "', "
-        + "'" + user.getMobilephone()  + "', "
-        + "'" + user.getRole()  + "', "
-        + "'" + user.getClientID() + "')";
+	public boolean clientIDExist(String clientid) {
 
-    Connection c = null;
-    Statement s = null;
-    ResultSet r = null;
+		String sql = "SELECT clientId FROM SecOblig.AppUser" + " WHERE clientId = '" + clientid + "'";
 
-    try {        
-      c = DatabaseHelper.getConnection();
-      s = c.createStatement();       
-      int row = s.executeUpdate(sql);
-      if(row >= 0)
-    	  return true;
-    } catch (Exception e) {
-    	System.out.println(e);
-    	return false;
-    } finally {
-      DatabaseHelper.closeConnection(r, s, c);
-    }
-    
-    return false;
-  }
-  
-  public List<String> getUsernames() {
-	  
-	  List<String> usernames = new ArrayList<String>();
-	  
-	  String sql = "SELECT username FROM SecOblig.AppUser";
+		String clientID = null;
 
-		    Connection c = null;
-		    Statement s = null;
-		    ResultSet r = null;
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
 
-		    try {        
-		      c = DatabaseHelper.getConnection();
-		      s = c.createStatement();       
-		      r = s.executeQuery(sql);
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			r = s.executeQuery(sql);
 
-		      while (r.next()) {
-		    	  usernames.add(r.getString("username"));
-		      }
+			if (r.next()) {
+				clientID = r.getString("clientId");
+			}
 
-		    } catch (Exception e) {
-		      System.out.println(e);
-		    } finally {
-		      DatabaseHelper.closeConnection(r, s, c);
-		    }
-	  
-	  return usernames;
-  }
-  
-  public boolean updateUserPassword(String username, String passwordnew) {
-	  
-	  String hashedPassword = Crypto.generateMD5Hash(passwordnew);
-	  
-	    String sql = "UPDATE SecOblig.AppUser "
-	    		+ "SET passhash = '" + hashedPassword + "' "
-	    				+ "WHERE username = '" + username + "'";
-	
-	    Connection c = null;
-	    Statement s = null;
-	    ResultSet r = null;
-	
-	    try {        
-	      c = DatabaseHelper.getConnection();
-	      s = c.createStatement();       
-	      int row = s.executeUpdate(sql);
-	      System.out.println("Password update successful for "+username);
-	      if(row >= 0)
-	    	  return true;
-	      
-	    } catch (Exception e) {
-	      System.out.println(e);
-	      return false;
-	    } finally {
-	      DatabaseHelper.closeConnection(r, s, c);
-	    }
-	    
-	    return false;
-  }
-  
-  public boolean updateUserRole(String username, String role) {
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
 
-	    String sql = "UPDATE SecOblig.AppUser "
-	    		+ "SET role = '" + role + "' "
-	    				+ "WHERE username = '" + username + "'";
-	
-	    Connection c = null;
-	    Statement s = null;
-	    ResultSet r = null;
-	
-	    try {        
-	      c = DatabaseHelper.getConnection();
-	      s = c.createStatement();       
-	      int row = s.executeUpdate(sql);
-	      System.out.println("Role update successful for "+username+" New role = "+role);
-	      if(row >= 0)
-	    	  return true;
-	      
-	    } catch (Exception e) {
-	      System.out.println(e);
-	      return false;
-	    } finally {
-	      DatabaseHelper.closeConnection(r, s, c);
-	    }
-	    return false;
-  }
+		return clientID != null;
+	}
+
+	public boolean saveUser(AppUser user) {
+
+		String sql = "INSERT INTO SecOblig.AppUser VALUES (" + "'" + user.getUsername() + "', " + "'"
+				+ user.getPasshash() + "', " + "'" + user.getFirstname() + "', " + "'" + user.getLastname() + "', "
+				+ "'" + user.getMobilephone() + "', " + "'" + user.getRole() + "', " + "'" + user.getClientID() + "')";
+
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
+
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			int row = s.executeUpdate(sql);
+			if (row >= 0)
+				return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
+
+		return false;
+	}
+
+	public List<String> getUsernames() {
+
+		List<String> usernames = new ArrayList<String>();
+
+		String sql = "SELECT username FROM SecOblig.AppUser";
+
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
+
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			r = s.executeQuery(sql);
+
+			while (r.next()) {
+				usernames.add(r.getString("username"));
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
+
+		return usernames;
+	}
+
+	public boolean updateUserPassword(String username, String passwordnew) {
+
+		String hashedPassword = Crypto.generateMD5Hash(passwordnew);
+
+		String sql = "UPDATE SecOblig.AppUser " + "SET passhash = '" + hashedPassword + "' " + "WHERE username = '"
+				+ username + "'";
+
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
+
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			int row = s.executeUpdate(sql);
+			System.out.println("Password update successful for " + username);
+			if (row >= 0)
+				return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
+
+		return false;
+	}
+
+	public boolean updateUserRole(String username, String role) {
+
+		String sql = "UPDATE SecOblig.AppUser " + "SET role = '" + role + "' " + "WHERE username = '" + username + "'";
+
+		Connection c = null;
+		Statement s = null;
+		ResultSet r = null;
+
+		try {
+			c = DatabaseHelper.getConnection();
+			s = c.createStatement();
+			int row = s.executeUpdate(sql);
+			System.out.println("Role update successful for " + username + " New role = " + role);
+			if (row >= 0)
+				return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		} finally {
+			DatabaseHelper.closeConnection(r, s, c);
+		}
+		return false;
+	}
 
 }
-

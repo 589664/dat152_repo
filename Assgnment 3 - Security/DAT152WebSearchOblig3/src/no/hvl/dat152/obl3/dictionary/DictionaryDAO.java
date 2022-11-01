@@ -3,6 +3,8 @@ package no.hvl.dat152.obl3.dictionary;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class DictionaryDAO {
@@ -14,8 +16,16 @@ public class DictionaryDAO {
 	}
 
 	public List<String> findEntries(String word) throws Exception {
-
-		String searchword = opted_root + dictFile(word.toLowerCase().charAt(0));
+		
+		Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
+		Matcher match = pattern.matcher(word);
+		boolean SearchIsClean = match.matches();
+		
+		List<String> search_results = null;
+		
+		if(SearchIsClean) {
+			
+		String searchword = opted_root + dictFile(word.toLowerCase().charAt(0));	
 		String page = null;
 		try {
 			page = FileReaderUtil.getWebFile(searchword);
@@ -28,7 +38,8 @@ public class DictionaryDAO {
 		}
 
 		DictionaryParser parser = new DictionaryParser(page);
-		List<String> search_results = parser.findMatchingEntries(word);
+		search_results = parser.findMatchingEntries(word);
+		}
 		
 		return search_results;
 	}
