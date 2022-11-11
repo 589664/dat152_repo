@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class Student {
+public class Item {
 	@Id
 	@Column
 	@GeneratedValue
@@ -18,10 +18,10 @@ public class Student {
 	private String name;
 
 	@Column
-	private int age;
+	private Double price;
 
 	@Column
-	private String email;
+	private String description;
 
 	public int getId() {
 		return id;
@@ -39,25 +39,26 @@ public class Student {
 		this.name = name;
 	}
 
-	public int getAge() {
-		return age;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", name=" + name + ", age=" + age + ", email=" + email + "]";
+		return "Item [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description + "]";
 	}
 
+	
 }
