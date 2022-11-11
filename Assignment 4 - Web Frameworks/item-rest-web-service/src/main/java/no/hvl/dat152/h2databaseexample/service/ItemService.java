@@ -2,6 +2,7 @@ package no.hvl.dat152.h2databaseexample.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,19 +34,13 @@ public class ItemService {
 		return item;
 	}
 	
-	public Item getItemById(int id) {
-		return itemRepository.findById(id).get();
+	public Optional<Item> getItemById(int id) {
+		return itemRepository.findById(id);
 	}
 
 	public void delete(int id) {
 		itemRepository.deleteById(id);
 	}
 	
-	public void update(int id, Item item) {
-		Item item1 = itemRepository.findById(id).get();
-		item1.setDescription(item.getDescription());
-		item1.setName(item.getName());
-		item1.setPrice(item.getPrice());
-		itemRepository.save(item1);
-	}
+	//moved update to ItemController
 }
