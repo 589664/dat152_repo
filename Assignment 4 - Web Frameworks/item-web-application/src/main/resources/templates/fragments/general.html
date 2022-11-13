@@ -19,13 +19,11 @@
 </head>
 <body>
     <div th:fragment="header">
-        <h1>Demo: Spring Web MVC (<span th:text="#{label.heading}" />)</h1>
+        <h1>ShoppingList web application (<span th:text="#{label.heading}" />)</h1>
     </div>
 
     <div class="text-left" th:fragment="menu">
         <p> <a href="/">Home</a> | <a href="/viewitems">Shoppinglist</a> | 
-            <a href="http://spring.io">Spring Framework</a> | 
-            <a href="https://www.thymeleaf.org/documentation.html">Thymeleaf</a> | 
             <span th:text="#{lang.change}"></span>:
 			<select id="locales">
 			    <option value=""></option>
@@ -36,8 +34,7 @@
     
     
     <footer class="text-center" th:fragment="footer">
-    	<p style="font-style: italic"> Created by Lasse Jenssen </p>
-    	<p> <a href="http://www.jcon.no/blog">http://www.jcon.no/blog</a></p>
+    	<p style="font-style: italic"> Created by 589664 </p>
     </footer>
 </body>
 </html>

@@ -10,7 +10,6 @@
 	</div>
 	
 	<form th:action="@{/createitem}" method="post" enctype="multipart/form-data">
-	    <div><input type="hidden" th:value="${id}" name="id" /></div>
 		<table>
 			<tr>
 				<td><span th:text="#{label.name}" />:</td>
