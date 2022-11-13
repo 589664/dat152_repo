@@ -26,6 +26,9 @@
 						<td>
 							<a th:href="@{viewitem/{id}(id=${item.id})}">view</a>
 						</td>
+						<td>
+							<a th:href="@{/deleteitem(id=${item.id})}"><button>Delete</button></a>
+						</td>
 					</tr>
 				</table>
 		</div>
