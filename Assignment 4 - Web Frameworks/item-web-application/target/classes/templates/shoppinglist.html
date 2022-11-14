@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles (title='Shopping List')">
+<head charset="UTF-8" th:replace="fragments/general.html :: headerfiles (title='Shopping List')">
 <body>
 <div class="container">
 	<div class="page-header" id="banner">
@@ -25,6 +25,9 @@
 						<td th:text="${item.description}"></td>
 						<td>
 							<a th:href="@{viewitem/{id}(id=${item.id})}">view</a>
+						</td>
+						<td>
+							<a th:href="@{updateitem/{id}(id=${item.id})}"><button>Update</button></a>
 						</td>
 						<td>
 							<a th:href="@{/deleteitem(id=${item.id})}"><button>Delete</button></a>

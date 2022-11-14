@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: u589664.dat152.test.ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.616 s - in u589664.dat152.test.ApplicationTests

@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,6 +72,30 @@ public class ItemController {
 		final Item newItem = new Item(name, price, description);
 		
 		restTemplate.postForObject(url, newItem, Item.class);
+        
+        return "redirect:viewitems";
+    }
+	
+	@RequestMapping(value = "/updateitem/{id}", method = RequestMethod.GET)
+    protected String updateItem(@PathVariable String id, Model model) {
+		String url = "http://localhost:8299/items/" + id;
+		
+        final Item item = restTemplate.getForEntity(url, Item.class).getBody();
+        model.addAttribute("item", item);
+		
+        return "updateitem";
+    }
+	
+	@PostMapping("/updateitem")
+    protected String updateItem(@RequestParam String id, @RequestParam String name, 
+    		                    @RequestParam Double price, @RequestParam String description, 
+    		                    Model model) {
+		
+		String url = "http://localhost:8299/items/" + id;
+		
+		Item newItem = new Item(name, price, description);
+		
+		restTemplate.put(url, newItem);
         
         return "redirect:viewitems";
     }
